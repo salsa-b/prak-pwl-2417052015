@@ -3,20 +3,22 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 
 class UserModel extends Model
 {
     protected $table = 'user';
-    
+
     protected $fillable = [
         'nama',
-        'npm',
+        'nim',
         'kelas_id',
     ];
 
-    public function kelas(): BelongsTo
+    public function getUser()
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id');
+        return $this->join('kelas', 'kelas.id', '=', 'user.kelas_id')
+            ->select('user.*', 'kelas.nama_kelas as nama_kelas')
+            ->get();
     }
 }
