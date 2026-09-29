@@ -9,7 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mata_kuliah', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->string('kode_mk');
             $table->string('nama_mk');
             $table->integer('sks');
             $table->timestamps();
@@ -18,6 +19,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('mata_kuliah');
+        Schema::dropIfExists('mata_kuliah'); 
     }
 };
