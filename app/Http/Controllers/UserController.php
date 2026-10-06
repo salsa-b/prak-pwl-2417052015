@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kelas;
 use App\Models\UserModel;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -51,7 +52,12 @@ class UserController extends Controller
 
     public function edit($id)
     {
-        $user = UserModel::findOrFail($id);
+        try {
+            $user = UserModel::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            return redirect()->to('/user')->with('error', 'Data user tidak ditemukan!');
+        }
+
         $data = [
             'title' => 'Edit User',
             'user' => $user,
@@ -68,20 +74,32 @@ class UserController extends Controller
             'kelas_id' => 'required|exists:kelas,id',
         ]);
 
-        $user = UserModel::findOrFail($id);
-        $user->update([
-            'nama' => $request->input('nama'),
-            'nim' => $request->input('npm'),
-            'kelas_id' => $request->input('kelas_id'),
-        ]);
+        try {
+            $user = UserModel::findOrFail($id);
+            $user->update([
+                'nama' => $request->input('nama'),
+                'nim' => $request->input('npm'),
+                'kelas_id' => $request->input('kelas_id'),
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return redirect()->to('/user')->with('error', 'Gagal memperbarui: data user tidak ditemukan!');
+        } catch (\Throwable $e) {
+            return redirect()->to('/user')->with('error', 'Gagal memperbarui data user!');
+        }
 
         return redirect()->to('/user')->with('success', 'Data user berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        $user = UserModel::findOrFail($id);
-        $user->delete();
+        try {
+            $user = UserModel::findOrFail($id);
+            $user->delete();
+        } catch (ModelNotFoundException $e) {
+            return redirect()->to('/user')->with('error', 'Gagal menghapus: data user tidak ditemukan!');
+        } catch (\Throwable $e) {
+            return redirect()->to('/user')->with('error', 'Gagal menghapus data user!');
+        }
 
         return redirect()->to('/user')->with('success', 'Data user berhasil dihapus!');
     }

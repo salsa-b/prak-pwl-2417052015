@@ -36,12 +36,12 @@
                         <td>{{ $mk->nama_mk }}</td>
                         <td>{{ $mk->sks }}</td>
                         <td>
-                            <a href="{{ route('matakuliah.edit', $mk->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ route('matakuliah.edit', $mk->id) }}" class="btn btn-warning btn-sm btn-aksi"><i class="bi bi-pencil-square"></i> Edit</a>
                             
                             <form action="{{ route('matakuliah.destroy', $mk->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                <button type="submit" class="btn btn-danger btn-sm btn-aksi"><i class="bi bi-trash3-fill"></i> Hapus</button>
                             </form>
                         </td>
                     </tr>
