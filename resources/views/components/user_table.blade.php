@@ -18,12 +18,12 @@
                     <td>{{ $user->nim }}</td>
                     <td>{{ $user->nama_kelas }}</td>
                     <td>
-                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{{ route('user.edit', $user->id) }}" class="btn btn-warning btn-sm btn-aksi"><i class="bi bi-pencil-square"></i> Edit</a>
 
                         <form action="{{ route('user.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Yakin ingin menghapus data ini?');">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                            <button type="submit" class="btn btn-danger btn-sm btn-aksi"><i class="bi bi-trash3-fill"></i> Hapus</button>
                         </form>
                     </td>
                 </tr>

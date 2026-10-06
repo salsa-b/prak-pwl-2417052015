@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MataKuliah;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class MataKuliahController extends Controller
@@ -49,19 +50,31 @@ class MataKuliahController extends Controller
             'sks' => 'required|integer|min:1|max:6',
         ]);
 
-        $mk = MataKuliah::findOrFail($id);
-        $mk->update([
-            'nama_mk' => $request->input('nama_mk'),
-            'sks' => $request->input('sks'),
-        ]);
+        try {
+            $mk = MataKuliah::findOrFail($id);
+            $mk->update([
+                'nama_mk' => $request->input('nama_mk'),
+                'sks' => $request->input('sks'),
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return redirect()->to('/mata-kuliah')->with('error', 'Gagal memperbarui: data tidak ditemukan!');
+        } catch (\Throwable $e) {
+            return redirect()->to('/mata-kuliah')->with('error', 'Gagal memperbarui data!');
+        }
 
         return redirect()->to('/mata-kuliah')->with('success', 'Data berhasil diperbarui!');
     }
 
     public function destroy($id)
     {
-        $mk = MataKuliah::findOrFail($id);
-        $mk->delete();
+        try {
+            $mk = MataKuliah::findOrFail($id);
+            $mk->delete();
+        } catch (ModelNotFoundException $e) {
+            return redirect()->to('/mata-kuliah')->with('error', 'Gagal menghapus: data tidak ditemukan!');
+        } catch (\Throwable $e) {
+            return redirect()->to('/mata-kuliah')->with('error', 'Gagal menghapus data!');
+        }
 
         return redirect()->to('/mata-kuliah')->with('success', 'Data berhasil dihapus!');
     }
