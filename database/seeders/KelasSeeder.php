@@ -2,15 +2,24 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Kelas;
+use Illuminate\Database\Seeder;
 
 class KelasSeeder extends Seeder
 {
     public function run(): void
     {
-        Kelas::create(['nama_kelas' => 'PWL-A']);
-        Kelas::create(['nama_kelas' => 'PWL-B']);
-        Kelas::create(['nama_kelas' => 'PWL-C']);
+        $data = [
+            'A',
+            'B',
+            'C',
+            'D',
+        ];
+
+        foreach ($data as $kelas) {
+            Kelas::create([
+                'nama_kelas' => $kelas,
+            ]);
+        }
     }
 }

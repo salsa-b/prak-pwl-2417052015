@@ -17,7 +17,17 @@ class UserController extends Controller
         $this->kelasModel = new Kelas();
     }
 
-    public function create(){
+    public function index()
+    {
+        $data = [
+            'title' => 'List User',
+            'users' => $this->userModel->getUser(),
+        ];
+        return view('list_user', $data);
+    }
+
+    public function create()
+    {
         $kelas = $this->kelasModel->getKelas();
         $data = [
             'title' => 'Create User',
@@ -26,7 +36,7 @@ class UserController extends Controller
         return view('create_user', $data);
     }
 
-        public function store(Request $request)
+    public function store(Request $request)
     {
         $this->userModel->create([
             'nama' => $request->input('nama'),
@@ -34,15 +44,45 @@ class UserController extends Controller
             'kelas_id' => $request->input('kelas_id'),
         ]);
 
-        return redirect()->to('/user');
+        return redirect()->to('/user')->with('success', 'Data user berhasil ditambahkan!');
     }
 
-        public function index()
+    // ===== Modul 6: Update & Delete untuk User =====
+
+    public function edit($id)
     {
+        $user = UserModel::findOrFail($id);
         $data = [
-            'title' => 'List User',
-            'users' => $this->userModel->getUser(),
+            'title' => 'Edit User',
+            'user' => $user,
+            'kelas' => $this->kelasModel->getKelas(),
         ];
-        return view('list_user', $data);
+        return view('edit_user', $data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required',
+            'npm' => 'required',
+            'kelas_id' => 'required|exists:kelas,id',
+        ]);
+
+        $user = UserModel::findOrFail($id);
+        $user->update([
+            'nama' => $request->input('nama'),
+            'nim' => $request->input('npm'),
+            'kelas_id' => $request->input('kelas_id'),
+        ]);
+
+        return redirect()->to('/user')->with('success', 'Data user berhasil diperbarui!');
+    }
+
+    public function destroy($id)
+    {
+        $user = UserModel::findOrFail($id);
+        $user->delete();
+
+        return redirect()->to('/user')->with('success', 'Data user berhasil dihapus!');
     }
 }
